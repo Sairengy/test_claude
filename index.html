@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Color Palette Generator</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <title>Frame Painter</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@500;700&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -14,175 +14,187 @@
       color: #e4e4e7;
       min-height: 100vh;
       display: flex;
-      flex-direction: column;
       align-items: center;
-      padding: 60px 24px 80px;
+      justify-content: center;
+      padding: 48px 24px;
     }
 
-    header {
-      text-align: center;
-      margin-bottom: 52px;
-    }
-
-    header h1 {
-      font-size: 2rem;
-      font-weight: 600;
-      letter-spacing: -0.03em;
-      color: #fafafa;
-    }
-
-    header p {
-      margin-top: 8px;
-      font-size: 0.925rem;
-      color: #71717a;
-      font-weight: 300;
-    }
-
-    .input-row {
+    .layout {
       display: flex;
       align-items: center;
-      gap: 12px;
-      margin-bottom: 56px;
+      gap: 80px;
+      max-width: 1100px;
+      width: 100%;
     }
 
-    .swatch-preview {
-      width: 44px;
-      height: 44px;
-      border-radius: 10px;
-      background: #6366f1;
+    /* ── Left panel ── */
+    .controls {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
       flex-shrink: 0;
-      transition: background 0.2s, box-shadow 0.15s;
-      border: 1px solid rgba(255,255,255,0.08);
+      width: 280px;
+    }
+
+    .controls-header h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #fafafa;
+      line-height: 1.15;
+    }
+
+    .controls-header p {
+      margin-top: 10px;
+      font-size: 0.9rem;
+      color: #71717a;
+      font-weight: 300;
+      line-height: 1.6;
+    }
+
+    .picker-section {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .picker-label {
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #52525b;
+    }
+
+    .color-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .swatch-btn {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      border: 2px solid rgba(255,255,255,0.1);
       cursor: pointer;
+      flex-shrink: 0;
+      transition: box-shadow 0.15s, border-color 0.15s;
+      background: #c9a84c;
     }
 
-    .swatch-preview:hover {
-      box-shadow: 0 0 0 3px rgba(255,255,255,0.12);
-    }
-
-    .input-wrapper {
-      position: relative;
+    .swatch-btn:hover {
+      box-shadow: 0 0 0 3px rgba(255,255,255,0.15);
+      border-color: rgba(255,255,255,0.2);
     }
 
     input[type="color"] {
       position: absolute;
-      width: 0;
-      height: 0;
-      padding: 0;
-      border: none;
-      opacity: 0;
+      width: 0; height: 0; opacity: 0;
       pointer-events: none;
-      top: 100%;
-      left: 0;
     }
 
     .hex-input {
+      flex: 1;
       background: #18181b;
       border: 1px solid #27272a;
-      border-radius: 10px;
+      border-radius: 12px;
       color: #fafafa;
-      font-family: inherit;
+      font-family: 'Inter', monospace;
       font-size: 1rem;
       font-weight: 500;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.06em;
       padding: 0 16px;
-      height: 44px;
-      width: 148px;
+      height: 48px;
       outline: none;
       transition: border-color 0.15s;
     }
 
-    .hex-input:focus {
-      border-color: #52525b;
-    }
+    .hex-input:focus { border-color: #52525b; }
+    .hex-input::placeholder { color: #3f3f46; }
+    .hex-input.error { border-color: #ef4444; }
 
-    .hex-input::placeholder { color: #52525b; }
-
-    .btn {
-      height: 44px;
-      padding: 0 24px;
-      background: #6366f1;
-      color: #fff;
-      border: none;
-      border-radius: 10px;
-      font-family: inherit;
-      font-size: 0.9rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: background 0.15s, transform 0.1s;
-      white-space: nowrap;
-    }
-
-    .btn:hover  { background: #4f52d4; }
-    .btn:active { transform: scale(0.97); }
-
-    .palette {
-      display: flex;
-      gap: 0;
-      border-radius: 16px;
-      overflow: hidden;
+    .repaint-btn {
       width: 100%;
-      max-width: 900px;
-      box-shadow: 0 24px 80px rgba(0,0,0,0.5);
-    }
-
-    .swatch {
-      flex: 1;
-      height: 200px;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      padding: 14px 10px;
+      height: 52px;
+      background: #c9a84c;
+      color: #1a0f00;
+      border: none;
+      border-radius: 12px;
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
       cursor: pointer;
-      position: relative;
-      transition: flex 0.25s ease;
-      overflow: hidden;
+      transition: filter 0.15s, transform 0.1s, background 0.3s;
     }
 
-    .swatch:hover { flex: 1.8; }
+    .repaint-btn:hover  { filter: brightness(1.12); }
+    .repaint-btn:active { transform: scale(0.97); }
 
-    .swatch-label {
+    .hint {
+      font-size: 0.78rem;
+      color: #3f3f46;
+      line-height: 1.5;
+    }
+
+    /* ── Right panel: painting ── */
+    .painting-side {
+      flex: 1;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 3px;
-      opacity: 0;
-      transform: translateY(6px);
-      transition: opacity 0.2s, transform 0.2s;
+      gap: 20px;
     }
 
-    .swatch:hover .swatch-label { opacity: 1; transform: translateY(0); }
+    .frame-outer {
+      padding: 22px;
+      border-radius: 4px;
+      transition: background 0.5s ease, box-shadow 0.5s ease;
+    }
 
-    .swatch-hex {
-      font-size: 0.72rem;
-      font-weight: 600;
-      letter-spacing: 0.08em;
+    .frame-inner {
+      padding: 10px;
+      transition: background 0.5s ease, box-shadow 0.5s ease;
+      box-shadow: inset 0 0 8px rgba(0,0,0,0.5);
+    }
+
+    .frame-mat {
+      background: #1a1208;
+      padding: 16px;
+    }
+
+    .frame-img {
+      display: block;
+      max-width: 480px;
+      width: 100%;
+      height: auto;
+    }
+
+    .painting-label {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .painting-nameplate {
+      color: #2a1800;
+      font-family: 'Playfair Display', 'Georgia', serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
-      padding: 4px 8px;
-      border-radius: 6px;
-      background: rgba(0,0,0,0.25);
-      backdrop-filter: blur(4px);
-      white-space: nowrap;
+      padding: 8px 32px;
+      border-radius: 2px;
+      transition: background 0.5s ease, box-shadow 0.5s ease;
     }
 
-    .swatch-num {
-      font-size: 0.65rem;
-      font-weight: 400;
-      opacity: 0.65;
-      letter-spacing: 0.05em;
-    }
-
-    .copy-hint {
-      font-size: 0.6rem;
-      opacity: 0.5;
-      letter-spacing: 0.04em;
-    }
-
+    /* ── Toast ── */
     .toast {
       position: fixed;
-      bottom: 32px;
+      bottom: 28px;
       left: 50%;
-      transform: translateX(-50%) translateY(12px);
+      transform: translateX(-50%) translateY(10px);
       background: #27272a;
       border: 1px solid #3f3f46;
       color: #e4e4e7;
@@ -201,115 +213,56 @@
       transform: translateX(-50%) translateY(0);
     }
 
-    .empty-state {
-      width: 100%;
-      max-width: 900px;
-      height: 200px;
-      border-radius: 16px;
-      border: 1.5px dashed #27272a;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #3f3f46;
-      font-size: 0.9rem;
-      letter-spacing: 0.02em;
-    }
-
-    /* ── Museum frame ── */
-    .museum-section {
-      margin-top: 80px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 20px;
-    }
-
-    .frame-outer {
-      padding: 22px;
-      background:
-        linear-gradient(135deg, #c9a84c 0%, #f5e29a 25%, #a8722a 50%, #f5e29a 75%, #c9a84c 100%);
-      border-radius: 4px;
-      box-shadow:
-        0 0 0 3px #7a4f1a,
-        0 0 0 6px #c9a84c,
-        0 8px 40px rgba(0,0,0,0.7),
-        inset 0 0 12px rgba(0,0,0,0.3);
-    }
-
-    .frame-inner {
-      padding: 10px;
-      background:
-        linear-gradient(135deg, #7a4f1a 0%, #c9a84c 30%, #7a4f1a 60%, #c9a84c 100%);
-      box-shadow: inset 0 0 8px rgba(0,0,0,0.5);
-    }
-
-    .frame-mat {
-      background: #1a1208;
-      padding: 16px;
-    }
-
-    .frame-img {
-      display: block;
-      max-width: 500px;
-      width: 100%;
-      height: auto;
-      box-shadow: inset 0 0 20px rgba(0,0,0,0.4);
-    }
-
-    .painting-label {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .painting-nameplate {
-      background: linear-gradient(135deg, #c9a84c, #f5e29a, #a8722a, #f5e29a, #c9a84c);
-      color: #2a1800;
-      font-family: 'Georgia', 'Times New Roman', serif;
-      font-size: 1.1rem;
-      font-weight: 700;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      padding: 8px 32px;
-      border-radius: 2px;
-      box-shadow:
-        0 0 0 2px #7a4f1a,
-        0 4px 12px rgba(0,0,0,0.5);
+    /* ── Responsive ── */
+    @media (max-width: 780px) {
+      .layout {
+        flex-direction: column-reverse;
+        gap: 48px;
+        align-items: center;
+      }
+      .controls { width: 100%; max-width: 360px; }
     }
   </style>
 </head>
 <body>
 
-  <header>
-    <h1>Color Palette Generator</h1>
-    <p>Enter a hex color to generate 10 shades from light to dark.</p>
-  </header>
+  <div class="layout">
 
-  <div class="input-row">
-    <div class="input-wrapper">
-      <div class="swatch-preview" id="preview" title="Pick a color"></div>
-      <input type="color" id="colorPicker" value="#6366f1" tabindex="-1" />
-    </div>
-    <input class="hex-input" id="hexInput" type="text" maxlength="7" placeholder="#6366f1" spellcheck="false" />
-    <button class="btn" id="generateBtn">Generate</button>
-  </div>
+    <!-- Left: controls -->
+    <div class="controls">
+      <div class="controls-header">
+        <h1>Frame Painter</h1>
+        <p>Choose a color and repaint the frame around Аркаша.</p>
+      </div>
 
-  <div id="paletteContainer">
-    <div class="empty-state">Your palette will appear here</div>
-  </div>
-
-  <div class="museum-section">
-    <div class="frame-outer">
-      <div class="frame-inner">
-        <div class="frame-mat">
-          <img class="frame-img" src="Аркадий оперный.png" alt="Аркаша" />
+      <div class="picker-section">
+        <div class="picker-label">Frame color</div>
+        <div class="color-row">
+          <div class="swatch-btn" id="swatchBtn" title="Open color picker"></div>
+          <input type="color" id="colorPicker" value="#c9a84c" tabindex="-1" />
+          <input class="hex-input" id="hexInput" type="text" maxlength="7" placeholder="#c9a84c" spellcheck="false" />
         </div>
       </div>
+
+      <button class="repaint-btn" id="repaintBtn">Repaint!</button>
+
+      <p class="hint">Click the color swatch to open the color picker, or type a hex code directly.</p>
     </div>
-    <div class="painting-label">
-      <div class="painting-nameplate">Аркаша</div>
+
+    <!-- Right: painting -->
+    <div class="painting-side">
+      <div class="frame-outer" id="frameOuter">
+        <div class="frame-inner" id="frameInner">
+          <div class="frame-mat">
+            <img class="frame-img" src="Аркадий оперный.png" alt="Аркаша" />
+          </div>
+        </div>
+      </div>
+      <div class="painting-label">
+        <div class="painting-nameplate" id="nameplate">Аркаша</div>
+      </div>
     </div>
+
   </div>
 
   <div class="toast" id="toast"></div>
@@ -317,12 +270,14 @@
   <script>
     const hexInput    = document.getElementById('hexInput');
     const colorPicker = document.getElementById('colorPicker');
-    const preview     = document.getElementById('preview');
-    const generateBtn = document.getElementById('generateBtn');
-    const container   = document.getElementById('paletteContainer');
+    const swatchBtn   = document.getElementById('swatchBtn');
+    const repaintBtn  = document.getElementById('repaintBtn');
+    const frameOuter  = document.getElementById('frameOuter');
+    const frameInner  = document.getElementById('frameInner');
+    const nameplate   = document.getElementById('nameplate');
     const toast       = document.getElementById('toast');
 
-    // ── Helpers ──────────────────────────────────────────────
+    // ── Color utilities ──────────────────────────────────────
 
     function hexToRgb(hex) {
       hex = hex.replace(/^#/, '');
@@ -366,31 +321,42 @@
       return '#' + v.toLowerCase();
     }
 
-    function getLuminance(hex) {
-      const { r, g, b } = hexToRgb(hex);
-      const toLinear = c => { c /= 255; return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); };
-      return 0.2126 * toLinear(r) + 0.7152 * toLinear(g) + 0.0722 * toLinear(b);
+    // Make a lighter/darker variant of a hex color
+    function shiftLightness(hex, delta) {
+      const { h, s, l } = rgbToHsl(hexToRgb(hex));
+      return hslToHex(h, s, Math.max(0, Math.min(100, l + delta)));
     }
 
-    function textColor(hex) {
-      return getLuminance(hex) > 0.35 ? '#1a1a1a' : '#ffffff';
+    // ── Apply frame color ────────────────────────────────────
+
+    function applyFrameColor(hex) {
+      const light  = shiftLightness(hex, +22);
+      const dark   = shiftLightness(hex, -22);
+      const vdark  = shiftLightness(hex, -38);
+
+      frameOuter.style.background =
+        `linear-gradient(135deg, ${dark} 0%, ${light} 25%, ${dark} 50%, ${light} 75%, ${dark} 100%)`;
+      frameOuter.style.boxShadow =
+        `0 0 0 3px ${vdark}, 0 0 0 6px ${dark}, 0 8px 40px rgba(0,0,0,0.7), inset 0 0 12px rgba(0,0,0,0.3)`;
+
+      frameInner.style.background =
+        `linear-gradient(135deg, ${vdark} 0%, ${dark} 30%, ${vdark} 60%, ${dark} 100%)`;
+
+      nameplate.style.background =
+        `linear-gradient(135deg, ${dark}, ${light}, ${dark}, ${light}, ${dark})`;
+      nameplate.style.boxShadow =
+        `0 0 0 2px ${vdark}, 0 4px 12px rgba(0,0,0,0.5)`;
+
+      // Also tint the repaint button to match
+      repaintBtn.style.background = hex;
+
+      // Dark text if color is light, light text if dark
+      const { l } = rgbToHsl(hexToRgb(hex));
+      repaintBtn.style.color = l > 55 ? '#1a0f00' : '#ffffff';
+      nameplate.style.color  = l > 55 ? '#1a0f00' : '#ffffff';
     }
 
-    // ── Palette generation ────────────────────────────────────
-
-    function generateShades(hex) {
-      const { h, s } = rgbToHsl(hexToRgb(hex));
-      // 10 steps: lightness from 95 → 10, keeping hue & saturation
-      // slightly reduce saturation at extremes for realism
-      return Array.from({ length: 10 }, (_, i) => {
-        const t = i / 9;                          // 0 = lightest, 1 = darkest
-        const l = 95 - t * 85;                    // 95% → 10%
-        const sFactor = 1 - 0.3 * (1 - Math.sin(Math.PI * (1 - t)));
-        return hslToHex(h, Math.min(s * sFactor, 100), l);
-      });
-    }
-
-    // ── UI ────────────────────────────────────────────────────
+    // ── UI interactions ──────────────────────────────────────
 
     let toastTimer;
     function showToast(msg) {
@@ -400,83 +366,56 @@
       toastTimer = setTimeout(() => toast.classList.remove('show'), 2000);
     }
 
-    function buildPalette(shades) {
-      container.innerHTML = '';
-      const palette = document.createElement('div');
-      palette.className = 'palette';
-
-      shades.forEach((hex, i) => {
-        const sw = document.createElement('div');
-        sw.className = 'swatch';
-        sw.style.background = hex;
-
-        const fg = textColor(hex);
-        sw.style.color = fg;
-
-        sw.innerHTML = `
-          <div class="swatch-label">
-            <span class="swatch-hex" style="color:${fg}">${hex}</span>
-            <span class="swatch-num" style="color:${fg}">${(i + 1) * 100}</span>
-            <span class="copy-hint" style="color:${fg}">click to copy</span>
-          </div>`;
-
-        sw.addEventListener('click', () => {
-          navigator.clipboard.writeText(hex).then(() => showToast(`Copied ${hex}`));
-        });
-
-        palette.appendChild(sw);
-      });
-
-      container.appendChild(palette);
-    }
-
-    function generate() {
+    function repaint() {
       let val = hexInput.value.trim();
       if (!val.startsWith('#')) val = '#' + val;
       if (!isValidHex(val)) {
-        hexInput.style.borderColor = '#ef4444';
-        setTimeout(() => hexInput.style.borderColor = '', 1200);
+        hexInput.classList.add('error');
+        setTimeout(() => hexInput.classList.remove('error'), 1200);
+        showToast('Enter a valid hex color');
         return;
       }
       const hex = normalizeHex(val);
       hexInput.value = hex;
-      preview.style.background = hex;
-      buildPalette(generateShades(hex));
+      swatchBtn.style.background = hex;
+      colorPicker.value = hex;
+      applyFrameColor(hex);
     }
 
-    // live preview as user types
+    // Live swatch preview as user types
     hexInput.addEventListener('input', () => {
       let val = hexInput.value.trim();
       if (!val.startsWith('#')) val = '#' + val;
       if (isValidHex(val)) {
         const hex = normalizeHex(val);
-        preview.style.background = hex;
+        swatchBtn.style.background = hex;
         colorPicker.value = hex;
       }
     });
 
-    hexInput.addEventListener('keydown', e => { if (e.key === 'Enter') generate(); });
-    generateBtn.addEventListener('click', generate);
+    hexInput.addEventListener('keydown', e => { if (e.key === 'Enter') repaint(); });
+    repaintBtn.addEventListener('click', repaint);
 
-    // Open native color picker when the color swatch is clicked
-    preview.addEventListener('click', () => colorPicker.click());
+    // Open color picker on swatch click
+    swatchBtn.addEventListener('click', () => colorPicker.click());
 
-    // Sync color picker → hex input, live preview, and palette
+    // Sync color picker → hex input + swatch
     colorPicker.addEventListener('input', () => {
-      const hex = colorPicker.value;
-      hexInput.value = hex;
-      preview.style.background = hex;
+      hexInput.value = colorPicker.value;
+      swatchBtn.style.background = colorPicker.value;
     });
 
     colorPicker.addEventListener('change', () => {
       hexInput.value = colorPicker.value;
-      generate();
+      repaint();
     });
 
-    // seed with default
-    hexInput.value = '#6366f1';
-    preview.style.background = '#6366f1';
-    generate();
+    // ── Seed with default gold ────────────────────────────────
+    const defaultColor = '#c9a84c';
+    hexInput.value = defaultColor;
+    swatchBtn.style.background = defaultColor;
+    colorPicker.value = defaultColor;
+    applyFrameColor(defaultColor);
   </script>
 </body>
 </html>
