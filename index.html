@@ -214,6 +214,69 @@
       font-size: 0.9rem;
       letter-spacing: 0.02em;
     }
+
+    /* ── Museum frame ── */
+    .museum-section {
+      margin-top: 80px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .frame-outer {
+      padding: 22px;
+      background:
+        linear-gradient(135deg, #c9a84c 0%, #f5e29a 25%, #a8722a 50%, #f5e29a 75%, #c9a84c 100%);
+      border-radius: 4px;
+      box-shadow:
+        0 0 0 3px #7a4f1a,
+        0 0 0 6px #c9a84c,
+        0 8px 40px rgba(0,0,0,0.7),
+        inset 0 0 12px rgba(0,0,0,0.3);
+    }
+
+    .frame-inner {
+      padding: 10px;
+      background:
+        linear-gradient(135deg, #7a4f1a 0%, #c9a84c 30%, #7a4f1a 60%, #c9a84c 100%);
+      box-shadow: inset 0 0 8px rgba(0,0,0,0.5);
+    }
+
+    .frame-mat {
+      background: #1a1208;
+      padding: 16px;
+    }
+
+    .frame-img {
+      display: block;
+      max-width: 500px;
+      width: 100%;
+      height: auto;
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.4);
+    }
+
+    .painting-label {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .painting-nameplate {
+      background: linear-gradient(135deg, #c9a84c, #f5e29a, #a8722a, #f5e29a, #c9a84c);
+      color: #2a1800;
+      font-family: 'Georgia', 'Times New Roman', serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 8px 32px;
+      border-radius: 2px;
+      box-shadow:
+        0 0 0 2px #7a4f1a,
+        0 4px 12px rgba(0,0,0,0.5);
+    }
   </style>
 </head>
 <body>
@@ -224,16 +287,29 @@
   </header>
 
   <div class="input-row">
-    <input class="hex-input" id="hexInput" type="text" maxlength="7" placeholder="#6366f1" spellcheck="false" />
     <div class="input-wrapper">
       <div class="swatch-preview" id="preview" title="Pick a color"></div>
       <input type="color" id="colorPicker" value="#6366f1" tabindex="-1" />
     </div>
+    <input class="hex-input" id="hexInput" type="text" maxlength="7" placeholder="#6366f1" spellcheck="false" />
     <button class="btn" id="generateBtn">Generate</button>
   </div>
 
   <div id="paletteContainer">
     <div class="empty-state">Your palette will appear here</div>
+  </div>
+
+  <div class="museum-section">
+    <div class="frame-outer">
+      <div class="frame-inner">
+        <div class="frame-mat">
+          <img class="frame-img" src="Аркадий оперный.png" alt="Аркаша" />
+        </div>
+      </div>
+    </div>
+    <div class="painting-label">
+      <div class="painting-nameplate">Аркаша</div>
+    </div>
   </div>
 
   <div class="toast" id="toast"></div>
